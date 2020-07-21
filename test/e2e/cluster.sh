@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -x
+set +e
 
 TMP_DIR=$(mktemp -d "$(pwd)/XXXXXXXXXXXX")
 TMP_BASENAME=$(basename ${TMP_DIR})
@@ -147,6 +148,7 @@ if [ "${UPGRADE_CLUSTER}" = "true" ] || [ "${SCALE_CLUSTER}" = "true" ] || [ -n 
     API_SERVER="$RESOURCE_GROUP.$REGION.$RESOURCE_MANAGER_VM_DNS_SUFFIX"
   fi
   
+  echo "getting cluster logs:"
   if [ "${GET_CLUSTER_LOGS}" = "true" ]; then
       docker run --rm \
       -v $(pwd):${WORK_DIR} \
@@ -257,6 +259,7 @@ if [ -n "$ADD_NODE_POOL_INPUT" ]; then
     ${DEV_IMAGE} make test-kubernetes || exit 1
 fi
 
+echo "Before scaling cluster:"
 if [ "${SCALE_CLUSTER}" = "true" ]; then
   for nodepool in $(jq -r  '.properties.agentPoolProfiles[].name' < _output/$RESOURCE_GROUP/apimodel.json); do
     docker run --rm \
@@ -326,6 +329,7 @@ if [ "${SCALE_CLUSTER}" = "true" ]; then
     ${DEV_IMAGE} make test-kubernetes || exit 1
 fi
 
+echo "Before upgrading cluster:"
 if [ "${UPGRADE_CLUSTER}" = "true" ]; then
   # modify the master VM SKU to simulate vertical vm scaling via upgrade
   docker run --rm \
