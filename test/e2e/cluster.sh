@@ -1,7 +1,6 @@
 #!/bin/bash
 
 set -x
-set +e
 
 TMP_DIR=$(mktemp -d "$(pwd)/XXXXXXXXXXXX")
 TMP_BASENAME=$(basename ${TMP_DIR})
