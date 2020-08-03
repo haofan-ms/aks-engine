@@ -114,7 +114,7 @@ docker run --rm \
 -e CUSTOM_KUBE_PROXY_IMAGE="${CUSTOM_KUBE_PROXY_IMAGE}" \
 -e IS_JENKINS="${IS_JENKINS}" \
 -e SKIP_TEST="${SKIP_TESTS}" \
--e GINKGO_FAIL_FAST=true \
+-e GINKGO_FAIL_FAST="${GINKGO_FAIL_FAST}" \
 -e GINKGO_FOCUS="${GINKGO_FOCUS}" \
 -e GINKGO_SKIP="${GINKGO_SKIP}" \
 -e API_PROFILE="${API_PROFILE}" \
@@ -135,7 +135,7 @@ docker run --rm \
 -e SERVICE_MANAGEMENT_VM_DNS_SUFFIX="${SERVICE_MANAGEMENT_VM_DNS_SUFFIX}" \
 -e RESOURCE_MANAGER_VM_DNS_SUFFIX="${RESOURCE_MANAGER_VM_DNS_SUFFIX}" \
 -e STABILITY_ITERATIONS=${STABILITY_ITERATIONS} \
-"${DEV_IMAGE}" make test-kubernetes || exit 1
+"${DEV_IMAGE}" make test-kubernetes
 
 if [ "${UPGRADE_CLUSTER}" = "true" ] || [ "${SCALE_CLUSTER}" = "true" ] || [ -n "$ADD_NODE_POOL_INPUT" ] || [ "${GET_CLUSTER_LOGS}" = "true" ]; then
   # shellcheck disable=SC2012
@@ -238,7 +238,7 @@ if [ -n "$ADD_NODE_POOL_INPUT" ]; then
     -e REGIONS=$REGION \
     -e IS_JENKINS=${IS_JENKINS} \
     -e SKIP_LOGS_COLLECTION=true \
-    -e GINKGO_FAIL_FAST=true \
+    -e GINKGO_FAIL_FAST="${GINKGO_FAIL_FAST}" \
     -e GINKGO_SKIP="${SKIP_AFTER_SCALE_DOWN}" \
     -e GINKGO_FOCUS="${GINKGO_FOCUS}" \
     -e SKIP_TEST=${SKIP_TESTS_AFTER_ADD_POOL} \
@@ -261,7 +261,7 @@ if [ -n "$ADD_NODE_POOL_INPUT" ]; then
     -e SERVICE_MANAGEMENT_VM_DNS_SUFFIX="${SERVICE_MANAGEMENT_VM_DNS_SUFFIX}" \
     -e RESOURCE_MANAGER_VM_DNS_SUFFIX="${RESOURCE_MANAGER_VM_DNS_SUFFIX}" \
     -e STABILITY_ITERATIONS=${STABILITY_ITERATIONS} \
-    ${DEV_IMAGE} make test-kubernetes || exit 1
+    ${DEV_IMAGE} make test-kubernetes
 fi
 
 if [ "${SCALE_CLUSTER}" = "true" ]; then
@@ -308,7 +308,7 @@ if [ "${SCALE_CLUSTER}" = "true" ]; then
     -e REGIONS=$REGION \
     -e IS_JENKINS=${IS_JENKINS} \
     -e SKIP_LOGS_COLLECTION=true \
-    -e GINKGO_FAIL_FAST=true \
+    -e GINKGO_FAIL_FAST="${GINKGO_FAIL_FAST}" \
     -e GINKGO_SKIP="${SKIP_AFTER_SCALE_DOWN}" \
     -e GINKGO_FOCUS="${GINKGO_FOCUS}" \
     -e SKIP_TEST=${SKIP_TESTS_AFTER_SCALE_DOWN} \
@@ -331,7 +331,7 @@ if [ "${SCALE_CLUSTER}" = "true" ]; then
     -e SERVICE_MANAGEMENT_VM_DNS_SUFFIX="${SERVICE_MANAGEMENT_VM_DNS_SUFFIX}" \
     -e RESOURCE_MANAGER_VM_DNS_SUFFIX="${RESOURCE_MANAGER_VM_DNS_SUFFIX}" \
     -e STABILITY_ITERATIONS=${STABILITY_ITERATIONS} \
-    ${DEV_IMAGE} make test-kubernetes || exit 1
+    ${DEV_IMAGE} make test-kubernetes
 fi
 
 if [ "${UPGRADE_CLUSTER}" = "true" ]; then
@@ -390,7 +390,7 @@ if [ "${UPGRADE_CLUSTER}" = "true" ]; then
       -e REGIONS=$REGION \
       -e IS_JENKINS=${IS_JENKINS} \
       -e SKIP_LOGS_COLLECTION=${SKIP_LOGS_COLLECTION} \
-      -e GINKGO_FAIL_FAST=true \
+      -e GINKGO_FAIL_FAST="${GINKGO_FAIL_FAST}" \
       -e GINKGO_SKIP="${SKIP_AFTER_UPGRADE}" \
       -e GINKGO_FOCUS="${GINKGO_FOCUS}" \
       -e SKIP_TEST=${SKIP_TESTS_AFTER_UPGRADE} \
@@ -413,7 +413,7 @@ if [ "${UPGRADE_CLUSTER}" = "true" ]; then
       -e SERVICE_MANAGEMENT_VM_DNS_SUFFIX="${SERVICE_MANAGEMENT_VM_DNS_SUFFIX}" \
       -e RESOURCE_MANAGER_VM_DNS_SUFFIX="${RESOURCE_MANAGER_VM_DNS_SUFFIX}" \
       -e STABILITY_ITERATIONS=${STABILITY_ITERATIONS} \
-      ${DEV_IMAGE} make test-kubernetes || exit 1
+      ${DEV_IMAGE} make test-kubernetes
   done
 fi
 
@@ -461,7 +461,7 @@ if [ "${SCALE_CLUSTER}" = "true" ]; then
     -e REGIONS=$REGION \
     -e IS_JENKINS=${IS_JENKINS} \
     -e SKIP_LOGS_COLLECTION=${SKIP_LOGS_COLLECTION} \
-    -e GINKGO_FAIL_FAST=true \
+    -e GINKGO_FAIL_FAST="${GINKGO_FAIL_FAST}" \
     -e GINKGO_SKIP="${SKIP_AFTER_SCALE_UP}" \
     -e GINKGO_FOCUS="${GINKGO_FOCUS}" \
     -e SKIP_TEST=${SKIP_TESTS_AFTER_SCALE_UP} \
