@@ -36,7 +36,7 @@ import (
 	"github.com/Azure/aks-engine/test/e2e/kubernetes/persistentvolumeclaims"
 	"github.com/Azure/aks-engine/test/e2e/kubernetes/pod"
 	"github.com/Azure/aks-engine/test/e2e/kubernetes/service"
-	"github.com/Azure/aks-engine/test/e2e/kubernetes/storageclass"
+	//"github.com/Azure/aks-engine/test/e2e/kubernetes/storageclass"
 	"github.com/Azure/aks-engine/test/e2e/kubernetes/util"
 	"github.com/Azure/aks-engine/test/e2e/remote"
 	. "github.com/onsi/ginkgo"
