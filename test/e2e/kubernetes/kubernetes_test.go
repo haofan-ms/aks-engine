@@ -40,7 +40,7 @@ import (
 	"github.com/Azure/aks-engine/test/e2e/kubernetes/persistentvolumeclaims"
 	"github.com/Azure/aks-engine/test/e2e/kubernetes/pod"
 	"github.com/Azure/aks-engine/test/e2e/kubernetes/service"
-	"github.com/Azure/aks-engine/test/e2e/kubernetes/storageclass"
+	//"github.com/Azure/aks-engine/test/e2e/kubernetes/storageclass"
 	"github.com/Azure/aks-engine/test/e2e/kubernetes/util"
 	"github.com/Azure/aks-engine/test/e2e/remote"
 	"github.com/Azure/azure-sdk-for-go/services/compute/mgmt/2019-12-01/compute"
@@ -927,7 +927,7 @@ var _ = Describe("Azure Container Cluster using the Kubernetes Orchestrator", fu
 			Expect(err).NotTo(HaveOccurred())
 		})
 
-		It("should have stable external container networking as we recycle a bunch of pods", func() {
+		/*It("should have stable external container networking as we recycle a bunch of pods", func() {
 			// Test for basic UDP networking
 			name := fmt.Sprintf("alpine-%s", cfg.Name)
 			command := fmt.Sprintf("nc -vz 8.8.8.8 53 || nc -vz 8.8.4.4 53")
@@ -953,7 +953,7 @@ var _ = Describe("Azure Container Cluster using the Kubernetes Orchestrator", fu
 			successes, err = pod.RunCommandMultipleTimes(pod.RunLinuxPod, "byrnedo/alpine-curl", name, command, cfg.StabilityIterations, 1*time.Second, stabilityCommandTimeout, cfg.Timeout)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(successes).To(Equal(cfg.StabilityIterations))
-		})
+		})*/
 
 		It("should have stable internal container networking as we recycle a bunch of pods", func() {
 			name := fmt.Sprintf("alpine-%s", cfg.Name)
@@ -1218,7 +1218,7 @@ var _ = Describe("Azure Container Cluster using the Kubernetes Orchestrator", fu
 			}
 		})
 
-		It("should have the correct storage classes deployed", func() {
+		/*It("should have the correct storage classes deployed", func() {
 			if util.IsUsingEphemeralDisks(eng.ExpandedDefinition.Properties.AgentPoolProfiles) {
 				Skip("no storage class is deployed when ephemeral disk is used, will not test")
 			}
@@ -1277,7 +1277,7 @@ var _ = Describe("Azure Container Cluster using the Kubernetes Orchestrator", fu
 					Expect(sc.AllowVolumeExpansion).To(BeTrue())
 				}
 			}
-		})
+		})*/
 
 		It("should be able to kubectl port-forward to a running pod", func() {
 			deploymentNamespace := "default"
@@ -2153,7 +2153,7 @@ var _ = Describe("Azure Container Cluster using the Kubernetes Orchestrator", fu
 					Skip("No windows agent was provisioned for this Cluster Definition")
 				}
 			})*/
-		It("should be able to attach azure file", func() {
+		/*It("should be able to attach azure file", func() {
 			if eng.HasWindowsAgents() && !eng.ExpandedDefinition.Properties.OrchestratorProfile.KubernetesConfig.NeedsContainerd() {
 				orchestratorVersion := eng.ExpandedDefinition.Properties.OrchestratorProfile.OrchestratorVersion
 				if orchestratorVersion == "1.11.0" {
@@ -2211,7 +2211,7 @@ var _ = Describe("Azure Container Cluster using the Kubernetes Orchestrator", fu
 			} else {
 				Skip("No windows agent was provisioned for this Cluster Definition")
 			}
-		})
+		})*/
 		// This test is not parallelizable due to tainting nodes with NoSchedule
 		It("should expect containers to be recreated after node restart", func() {
 			if eng.HasWindowsAgents() {

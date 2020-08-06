@@ -137,7 +137,7 @@ docker run --rm \
 -e STABILITY_ITERATIONS=${STABILITY_ITERATIONS} \
 "${DEV_IMAGE}" make test-kubernetes
 
-sudo mv ~/aks-engine/test/e2e/kubernetes/junit.xml ~/aks-engine/test/e2e/kubernetes/deployment-junit.xml
+#sudo mv ~/aks-engine/test/e2e/kubernetes/junit.xml ~/aks-engine/test/e2e/kubernetes/deployment-junit.xml
 
 if [ "${UPGRADE_CLUSTER}" = "true" ] || [ "${SCALE_CLUSTER}" = "true" ] || [ -n "$ADD_NODE_POOL_INPUT" ] || [ "${GET_CLUSTER_LOGS}" = "true" ]; then
   # shellcheck disable=SC2012
@@ -268,7 +268,7 @@ if [ -n "$ADD_NODE_POOL_INPUT" ]; then
     -e STABILITY_ITERATIONS=${STABILITY_ITERATIONS} \
     ${DEV_IMAGE} make test-kubernetes
 
-    sudo mv ~/aks-engine/test/e2e/kubernetes/junit.xml ~/aks-engine/test/e2e/kubernetes/addnodepool-junit.xml
+    #sudo mv ~/aks-engine/test/e2e/kubernetes/junit.xml ~/aks-engine/test/e2e/kubernetes/addnodepool-junit.xml
 fi
 
 if [ "${SCALE_CLUSTER}" = "true" ]; then
@@ -340,7 +340,7 @@ if [ "${SCALE_CLUSTER}" = "true" ]; then
     -e STABILITY_ITERATIONS=${STABILITY_ITERATIONS} \
     ${DEV_IMAGE} make test-kubernetes
 
-    sudo mv ~/aks-engine/test/e2e/kubernetes/junit.xml ~/aks-engine/test/e2e/kubernetes/scaledown-junit.xml
+    #sudo mv ~/aks-engine/test/e2e/kubernetes/junit.xml ~/aks-engine/test/e2e/kubernetes/scaledown-junit.xml
 fi
 
 if [ "${UPGRADE_CLUSTER}" = "true" ]; then
@@ -424,7 +424,7 @@ if [ "${UPGRADE_CLUSTER}" = "true" ]; then
       -e STABILITY_ITERATIONS=${STABILITY_ITERATIONS} \
       ${DEV_IMAGE} make test-kubernetes
 
-      sudo mv ~/aks-engine/test/e2e/kubernetes/junit.xml ~/aks-engine/test/e2e/kubernetes/upgrade-junit.xml
+      #sudo mv ~/aks-engine/test/e2e/kubernetes/junit.xml ~/aks-engine/test/e2e/kubernetes/upgrade-junit.xml
   done
 fi
 
@@ -497,5 +497,5 @@ if [ "${SCALE_CLUSTER}" = "true" ]; then
     -e STABILITY_ITERATIONS=${STABILITY_ITERATIONS} \
     ${DEV_IMAGE} make test-kubernetes
 
-    sudo mv ~/aks-engine/test/e2e/kubernetes/junit.xml ~/aks-engine/test/e2e/kubernetes/scaleup-junit.xml
+    #sudo mv ~/aks-engine/test/e2e/kubernetes/junit.xml ~/aks-engine/test/e2e/kubernetes/scaleup-junit.xml
 fi
