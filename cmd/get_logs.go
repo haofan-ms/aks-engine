@@ -39,6 +39,7 @@ type getLogsCmd struct {
 	location               string
 	apiModelPath           string
 	sshHostURI             string
+	linuxSSHPublicKey      string
 	linuxSSHPrivateKeyPath string
 	linuxScriptPath        string
 	outputDirectory        string
@@ -74,7 +75,8 @@ func newGetLogsCmd() *cobra.Command {
 	command.Flags().StringVarP(&glc.location, "location", "l", "", "Azure location where the cluster is deployed (required)")
 	command.Flags().StringVarP(&glc.apiModelPath, "api-model", "m", "", "path to the generated apimodel.json file (required)")
 	command.Flags().StringVar(&glc.sshHostURI, "ssh-host", "", "FQDN, or IP address, of an SSH listener that can reach all nodes in the cluster (required)")
-	command.Flags().StringVar(&glc.linuxSSHPrivateKeyPath, "linux-ssh-private-key", "", "path to a valid private SSH key to access the cluster's Linux nodes (required)")
+	command.Flags().StringVar(&glc.linuxSSHPublicKey, "linux-ssh-public-key", "", "value of a valid public SSH key to access the cluster's Linux nodes (required if 'linux-ssh-private-key' not present)")
+	command.Flags().StringVar(&glc.linuxSSHPrivateKeyPath, "linux-ssh-private-key", "", "path to a valid private SSH key to access the cluster's Linux nodes (required if 'linux-ssh-public-key' not present)")
 	command.Flags().StringVar(&glc.linuxScriptPath, "linux-script", "", "path to the log collection script to execute on the cluster's Linux nodes (required)")
 	command.Flags().StringVarP(&glc.outputDirectory, "output-directory", "o", "", "collected logs destination directory, derived from --api-model if missing")
 	command.Flags().BoolVarP(&glc.controlPlaneOnly, "control-plane-only", "", false, "get logs from control plane VMs only")
@@ -102,10 +104,12 @@ func (glc *getLogsCmd) validateArgs() (err error) {
 	} else if _, err := os.Stat(glc.apiModelPath); os.IsNotExist(err) {
 		return errors.Errorf("specified --api-model does not exist (%s)", glc.apiModelPath)
 	}
-	if glc.linuxSSHPrivateKeyPath == "" {
-		return errors.New("--linux-ssh-private-key must be specified")
-	} else if _, err := os.Stat(glc.linuxSSHPrivateKeyPath); os.IsNotExist(err) {
-		return errors.Errorf("specified --linux-ssh-private-key does not exist (%s)", glc.linuxSSHPrivateKeyPath)
+	if glc.linuxSSHPublicKey == "" {
+		if glc.linuxSSHPrivateKeyPath == "" {
+			return errors.New("--linux-ssh-public-key and --linux-ssh-private-key cannot be both empty")
+		} else if _, err := os.Stat(glc.linuxSSHPrivateKeyPath); os.IsNotExist(err) {
+			return errors.Errorf("specified --linux-ssh-private-key does not exist (%s)", glc.linuxSSHPrivateKeyPath)
+		}
 	}
 	if glc.linuxScriptPath == "" {
 		// optional once in VHD
@@ -146,11 +150,15 @@ func (glc *getLogsCmd) loadAPIModel() (err error) {
 		return errors.New("--location flag does not match api-model location")
 	}
 
-	lauth, err := helpers.PublicKeyAuth(glc.linuxSSHPrivateKeyPath)
-	if err != nil {
-		return errors.Wrap(err, "creating linux SSH config")
+	if glc.linuxSSHPublicKey == "" {
+		lauth, err := helpers.PublicKeyAuth(glc.linuxSSHPrivateKeyPath)
+		if err != nil {
+			return errors.Wrap(err, "creating linux SSH config")
+		}
+		glc.linuxSSHConfig = helpers.SSHClientConfig(glc.cs.Properties.LinuxProfile.AdminUsername, lauth)
+	} else {
+		glc.linuxSSHConfig = helpers.SSHClientConfig(glc.cs.Properties.LinuxProfile.AdminUsername, ssh.PublicKeys(glc.linuxSSHPublicKey))
 	}
-	glc.linuxSSHConfig = helpers.SSHClientConfig(glc.cs.Properties.LinuxProfile.AdminUsername, lauth)
 
 	if glc.cs.Properties.WindowsProfile != nil && glc.cs.Properties.WindowsProfile.GetSSHEnabled() {
 		glc.windowsSSHConfig = helpers.SSHClientConfig(
