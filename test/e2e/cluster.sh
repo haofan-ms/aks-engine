@@ -142,7 +142,7 @@ docker run --rm \
 -e ARC_LOCATION=${ARC_LOCATION:-$LOCATION} \
 "${DEV_IMAGE}" make test-kubernetes
 
-sudo mv ~/aks-engine/test/e2e/kubernetes/junit.xml ~/aks-engine/test/e2e/kubernetes/deployment-junit.xml
+sudo mv ${WORK_DIR}/test/e2e/kubernetes/junit.xml ${WORK_DIR}/test/e2e/kubernetes/deployment-junit.xml
 
 if [ "${UPGRADE_CLUSTER}" = "true" ] || [ "${SCALE_CLUSTER}" = "true" ] || [ -n "$ADD_NODE_POOL_INPUT" ] || [ "${GET_CLUSTER_LOGS}" = "true" ]; then
   # shellcheck disable=SC2012
@@ -351,7 +351,7 @@ if [ "${SCALE_CLUSTER}" = "true" ]; then
     -e ARC_LOCATION=${ARC_LOCATION:-$LOCATION} \
     ${DEV_IMAGE} make test-kubernetes
 
-    sudo mv ~/aks-engine/test/e2e/kubernetes/junit.xml ~/aks-engine/test/e2e/kubernetes/scale-down-junit.xml
+    sudo mv ${WORK_DIR}/test/e2e/kubernetes/junit.xml ${WORK_DIR}/test/e2e/kubernetes/scale-down-junit.xml
 fi
 
 if [ "${UPGRADE_CLUSTER}" = "true" ]; then
@@ -439,7 +439,7 @@ if [ "${UPGRADE_CLUSTER}" = "true" ]; then
       -e ARC_LOCATION=${ARC_LOCATION:-$LOCATION} \
       ${DEV_IMAGE} make test-kubernetes
 
-      sudo mv ~/aks-engine/test/e2e/kubernetes/junit.xml ~/aks-engine/test/e2e/kubernetes/upgrade-junit.xml
+      sudo mv ${WORK_DIR}/test/e2e/kubernetes/junit.xml ${WORK_DIR}/test/e2e/kubernetes/upgrade-junit.xml
   done
 fi
 
@@ -516,5 +516,5 @@ if [ "${SCALE_CLUSTER}" = "true" ]; then
     -e ARC_LOCATION=${ARC_LOCATION:-$LOCATION} \
     ${DEV_IMAGE} make test-kubernetes
 
-    sudo mv ~/aks-engine/test/e2e/kubernetes/junit.xml ~/aks-engine/test/e2e/kubernetes/scale-up-junit.xml
+    sudo mv ${WORK_DIR}/test/e2e/kubernetes/junit.xml ${WORK_DIR}/test/e2e/kubernetes/scale-up-junit.xml
 fi
