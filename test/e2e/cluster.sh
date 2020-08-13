@@ -142,6 +142,8 @@ docker run --rm \
 -e ARC_LOCATION=${ARC_LOCATION:-$LOCATION} \
 "${DEV_IMAGE}" make test-kubernetes
 
+sudo mv ~/aks-engine/test/e2e/kubernetes/junit.xml ~/aks-engine/test/e2e/kubernetes/deployment-junit.xml
+
 if [ "${UPGRADE_CLUSTER}" = "true" ] || [ "${SCALE_CLUSTER}" = "true" ] || [ -n "$ADD_NODE_POOL_INPUT" ] || [ "${GET_CLUSTER_LOGS}" = "true" ]; then
   # shellcheck disable=SC2012
   RESOURCE_GROUP=$(ls -dt1 _output/* | head -n 1 | cut -d/ -f2)
@@ -348,6 +350,8 @@ if [ "${SCALE_CLUSTER}" = "true" ]; then
     -e ARC_SUBSCRIPTION_ID=${ARC_SUBSCRIPTION_ID:-$AZURE_SUBSCRIPTION_ID} \
     -e ARC_LOCATION=${ARC_LOCATION:-$LOCATION} \
     ${DEV_IMAGE} make test-kubernetes
+
+    sudo mv ~/aks-engine/test/e2e/kubernetes/junit.xml ~/aks-engine/test/e2e/kubernetes/scale-down-junit.xml
 fi
 
 if [ "${UPGRADE_CLUSTER}" = "true" ]; then
@@ -406,7 +410,7 @@ if [ "${UPGRADE_CLUSTER}" = "true" ]; then
       -e REGIONS=$REGION \
       -e IS_JENKINS=${IS_JENKINS} \
       -e SKIP_LOGS_COLLECTION=${SKIP_LOGS_COLLECTION} \
-    -e GINKGO_FAIL_FAST="${GINKGO_FAIL_FAST}" \
+      -e GINKGO_FAIL_FAST="${GINKGO_FAIL_FAST}" \
       -e GINKGO_SKIP="${SKIP_AFTER_UPGRADE}" \
       -e GINKGO_FOCUS="${GINKGO_FOCUS}" \
       -e SKIP_TEST=${SKIP_TESTS_AFTER_UPGRADE} \
@@ -434,6 +438,8 @@ if [ "${UPGRADE_CLUSTER}" = "true" ]; then
       -e ARC_SUBSCRIPTION_ID=${ARC_SUBSCRIPTION_ID:-$AZURE_SUBSCRIPTION_ID} \
       -e ARC_LOCATION=${ARC_LOCATION:-$LOCATION} \
       ${DEV_IMAGE} make test-kubernetes
+
+      sudo mv ~/aks-engine/test/e2e/kubernetes/junit.xml ~/aks-engine/test/e2e/kubernetes/upgrade-junit.xml
   done
 fi
 
@@ -509,4 +515,6 @@ if [ "${SCALE_CLUSTER}" = "true" ]; then
     -e ARC_SUBSCRIPTION_ID=${ARC_SUBSCRIPTION_ID:-$AZURE_SUBSCRIPTION_ID} \
     -e ARC_LOCATION=${ARC_LOCATION:-$LOCATION} \
     ${DEV_IMAGE} make test-kubernetes
+
+    sudo mv ~/aks-engine/test/e2e/kubernetes/junit.xml ~/aks-engine/test/e2e/kubernetes/scale-up-junit.xml
 fi
