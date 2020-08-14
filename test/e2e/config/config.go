@@ -257,7 +257,7 @@ func (c *Config) SetKubeConfig() {
 // GetSSHKeyPath will return the absolute path to the ssh private key
 func (c *Config) GetSSHKeyPath() string {
 	if c.PrivateSSHKeyPath != "" {
-		return c.PrivateSSHKeyPath
+		return filepath.Join(c.CurrentWorkingDir, c.PrivateSSHKeyPath)
 	}
 	if c.UseDeployCommand {
 		return filepath.Join(c.CurrentWorkingDir, "_output", c.Name, "azureuser_rsa")
