@@ -46,10 +46,7 @@ if [ -n "$PUBLIC_SSH_KEY_FILE" ]; then
 fi
 
 if [ -n "$PRIVATE_SSH_KEY_FILE" ]; then
-  PRIVATE_SSH_KEY_NAME=${PRIVATE_SSH_KEY_FILE##*/}
-  sudo cp ${PRIVATE_SSH_KEY_FILE} $(pwd)/_output/${PRIVATE_SSH_KEY_NAME}
-  sudo chmod 600 $(pwd)/_output/${PRIVATE_SSH_KEY_NAME}
-  PRIVATE_SSH_KEY_FILE=_output/${PRIVATE_SSH_KEY_NAME}
+  PRIVATE_SSH_KEY_FILE=$(realpath --relative-to=${WORK_DIR} ${PRIVATE_SSH_KEY_FILE})
 fi
 
 echo "Running E2E tests against a cluster built with the following API model:"
