@@ -45,7 +45,7 @@ type Config struct {
 	SoakClusterName     string `envconfig:"SOAK_CLUSTER_NAME" default:""`
 	ForceDeploy         bool   `envconfig:"FORCE_DEPLOY" default:"false"`
 	PublicSSHKey        string `envconfig:"PUBLIC_SSH_KEY" default:""`
-	PrivateSSHKeyPath   string `envconfig:"PRIVATE_SSH_KEY" default:""`
+	PrivateSSHKeyPath   string `envconfig:"PRIVATE_SSH_KEY_FILE" default:""`
 	UseDeployCommand    bool   `envconfig:"USE_DEPLOY_COMMAND" default:"false"`
 	GinkgoFocus         string `envconfig:"GINKGO_FOCUS" default:""`
 	GinkgoSkip          string `envconfig:"GINKGO_SKIP" default:""`
