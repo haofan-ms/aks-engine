@@ -48,6 +48,7 @@ fi
 if [ -n "$PRIVATE_SSH_KEY" ]; then
   PRIVATE_SSH_KEY_NAME=${PRIVATE_SSH_KEY##*/}
   sudo cp ${PRIVATE_SSH_KEY} $(pwd)/_output/${PRIVATE_SSH_KEY_NAME}
+  sudo chmod 600 $(pwd)/_output/${PRIVATE_SSH_KEY_NAME}
   PRIVATE_SSH_KEY=_output/${PRIVATE_SSH_KEY_NAME}
 fi
 
