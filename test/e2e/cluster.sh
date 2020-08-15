@@ -41,6 +41,14 @@ ${ADD_NODE_POOL_INPUT}
 END
 fi
 
+if [ -n "$PUBLIC_SSH_KEY_FILE" ]; then
+  PUBLIC_SSH_KEY=$(cat "${PUBLIC_SSH_KEY_FILE}")
+fi
+
+if [ -n "$PRIVATE_SSH_KEY_FILE" ]; then
+  PRIVATE_SSH_KEY_FILE=$(realpath --relative-to=${WORK_DIR} ${PRIVATE_SSH_KEY_FILE})
+fi
+
 echo "Running E2E tests against a cluster built with the following API model:"
 cat ${TMP_DIR}/apimodel-input.json
 
@@ -89,6 +97,8 @@ docker run --rm \
 -e ORCHESTRATOR=kubernetes \
 -e ORCHESTRATOR_RELEASE="${ORCHESTRATOR_RELEASE}" \
 -e CREATE_VNET="${CREATE_VNET}" \
+-e PUBLIC_SSH_KEY="${PUBLIC_SSH_KEY}" \
+-e PRIVATE_SSH_KEY_FILE="${PRIVATE_SSH_KEY_FILE}" \
 -e TIMEOUT="${E2E_TEST_TIMEOUT}" \
 -e LB_TIMEOUT="${LB_TEST_TIMEOUT}" \
 -e KUBERNETES_IMAGE_BASE=$KUBERNETES_IMAGE_BASE \
@@ -161,6 +171,7 @@ if [ "${UPGRADE_CLUSTER}" = "true" ] || [ "${SCALE_CLUSTER}" = "true" ] || [ -n 
   fi
 
   if [ "${GET_CLUSTER_LOGS}" = "true" ]; then
+      PRIVATE_SSH_KEY_FILE ="${PRIVATE_SSH_KEY_FILE:-_output/${RESOURCE_GROUP}-ssh}"
       docker run --rm \
       -v $(pwd):${WORK_DIR} \
       -w ${WORK_DIR} \
@@ -171,7 +182,7 @@ if [ "${UPGRADE_CLUSTER}" = "true" ] || [ "${SCALE_CLUSTER}" = "true" ] || [ -n 
       --api-model _output/$RESOURCE_GROUP/apimodel.json \
       --location $REGION \
       --ssh-host $API_SERVER \
-      --linux-ssh-private-key _output/$RESOURCE_GROUP-ssh \
+      --linux-ssh-private-key $PRIVATE_SSH_KEY_FILE \
       --linux-script ./scripts/collect-logs.sh
       # TODO remove --linux-script once collect-logs.sh is part of the VHD
   fi
@@ -314,6 +325,7 @@ if [ "${SCALE_CLUSTER}" = "true" ]; then
     -e INFRA_RESOURCE_GROUP="${INFRA_RESOURCE_GROUP}" \
     -e ORCHESTRATOR=kubernetes \
     -e NAME=$RESOURCE_GROUP \
+    -e PRIVATE_SSH_KEY_FILE="${PRIVATE_SSH_KEY_FILE}"
     -e TIMEOUT=${E2E_TEST_TIMEOUT} \
     -e LB_TIMEOUT=${LB_TEST_TIMEOUT} \
     -e KUBERNETES_IMAGE_BASE=$KUBERNETES_IMAGE_BASE \
@@ -402,6 +414,7 @@ if [ "${UPGRADE_CLUSTER}" = "true" ]; then
       -e INFRA_RESOURCE_GROUP="${INFRA_RESOURCE_GROUP}" \
       -e ORCHESTRATOR=kubernetes \
       -e NAME=$RESOURCE_GROUP \
+      -e PRIVATE_SSH_KEY_FILE="${PRIVATE_SSH_KEY_FILE}" \
       -e TIMEOUT=${E2E_TEST_TIMEOUT} \
       -e LB_TIMEOUT=${LB_TEST_TIMEOUT} \
       -e KUBERNETES_IMAGE_BASE=$KUBERNETES_IMAGE_BASE \
@@ -479,6 +492,7 @@ if [ "${SCALE_CLUSTER}" = "true" ]; then
     -e INFRA_RESOURCE_GROUP="${INFRA_RESOURCE_GROUP}" \
     -e ORCHESTRATOR=kubernetes \
     -e NAME=$RESOURCE_GROUP \
+    -e PRIVATE_SSH_KEY_FILE="${PRIVATE_SSH_KEY_FILE}" \
     -e TIMEOUT=${E2E_TEST_TIMEOUT} \
     -e LB_TIMEOUT=${LB_TEST_TIMEOUT} \
     -e KUBERNETES_IMAGE_BASE=$KUBERNETES_IMAGE_BASE \
