@@ -171,7 +171,9 @@ if [ "${UPGRADE_CLUSTER}" = "true" ] || [ "${SCALE_CLUSTER}" = "true" ] || [ -n 
   fi
 
   if [ "${GET_CLUSTER_LOGS}" = "true" ]; then
-      PRIVATE_SSH_KEY_FILE ="${PRIVATE_SSH_KEY_FILE:-_output/${RESOURCE_GROUP}-ssh}"
+      if [ -z "${PRIVATE_SSH_KEY_FILE}" ]; then
+        PRIVATE_SSH_KEY_FILE=_output/${RESOURCE_GROUP}-ssh	
+      fi
       docker run --rm \
       -v $(pwd):${WORK_DIR} \
       -w ${WORK_DIR} \
