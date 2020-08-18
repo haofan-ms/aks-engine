@@ -46,7 +46,7 @@ if [ -n "$PUBLIC_SSH_KEY_FILE" ]; then
 fi
 
 if [ -n "$PRIVATE_SSH_KEY_FILE" ]; then
-  PRIVATE_SSH_KEY_FILE=$(realpath --relative-to=${WORK_DIR} ${PRIVATE_SSH_KEY_FILE})
+  PRIVATE_SSH_KEY_FILE=$(realpath --relative-to=$(pwd) ${PRIVATE_SSH_KEY_FILE})
 fi
 
 echo "Running E2E tests against a cluster built with the following API model:"
@@ -152,7 +152,7 @@ docker run --rm \
 -e ARC_LOCATION=${ARC_LOCATION:-$LOCATION} \
 "${DEV_IMAGE}" make test-kubernetes
 
-sudo mv ${pwd}/test/e2e/kubernetes/junit.xml ${pwd}/test/e2e/kubernetes/deployment-junit.xml
+sudo mv $(pwd)/test/e2e/kubernetes/junit.xml $(pwd)/test/e2e/kubernetes/deployment-junit.xml
 
 if [ "${UPGRADE_CLUSTER}" = "true" ] || [ "${SCALE_CLUSTER}" = "true" ] || [ -n "$ADD_NODE_POOL_INPUT" ] || [ "${GET_CLUSTER_LOGS}" = "true" ]; then
   # shellcheck disable=SC2012
@@ -363,7 +363,7 @@ if [ "${SCALE_CLUSTER}" = "true" ]; then
     -e ARC_LOCATION=${ARC_LOCATION:-$LOCATION} \
     ${DEV_IMAGE} make test-kubernetes
 
-    sudo mv ${pwd}/test/e2e/kubernetes/junit.xml ${pwd}/test/e2e/kubernetes/scale-down-junit.xml
+    sudo mv $(pwd)/test/e2e/kubernetes/junit.xml $(pwd)/test/e2e/kubernetes/scale-down-junit.xml
 fi
 
 if [ "${UPGRADE_CLUSTER}" = "true" ]; then
@@ -452,7 +452,7 @@ if [ "${UPGRADE_CLUSTER}" = "true" ]; then
       -e ARC_LOCATION=${ARC_LOCATION:-$LOCATION} \
       ${DEV_IMAGE} make test-kubernetes
 
-      sudo mv ${pwd}/test/e2e/kubernetes/junit.xml ${pwd}/test/e2e/kubernetes/upgrade-junit.xml
+      sudo mv $(pwd)/test/e2e/kubernetes/junit.xml $(pwd)/test/e2e/kubernetes/upgrade-junit.xml
   done
 fi
 
@@ -530,5 +530,5 @@ if [ "${SCALE_CLUSTER}" = "true" ]; then
     -e ARC_LOCATION=${ARC_LOCATION:-$LOCATION} \
     ${DEV_IMAGE} make test-kubernetes
 
-    sudo mv ${pwd}/test/e2e/kubernetes/junit.xml ${pwd}/test/e2e/kubernetes/scale-up-junit.xml
+    sudo mv $(pwd)/test/e2e/kubernetes/junit.xml $(pwd)/test/e2e/kubernetes/scale-up-junit.xml
 fi
