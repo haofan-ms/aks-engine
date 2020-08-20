@@ -170,25 +170,25 @@ var (
 	// AKSUbuntu1604OSImageConfig is the AKS image based on Ubuntu 16.04-LTS.
 	AKSUbuntu1604OSImageConfig = AzureOSImageConfig{
 		ImageOffer:     "aks",
-		ImageSku:       "aks-engine-ubuntu-1604-202007",
+		ImageSku:       "aks-engine-ubuntu-1604-202008",
 		ImagePublisher: "microsoft-aks",
-		ImageVersion:   "2020.07.24",
+		ImageVersion:   "2020.08.19",
 	}
 
 	// AKSUbuntu1804OSImageConfig is the AKS image based on Ubuntu 18.04-LTS.
 	AKSUbuntu1804OSImageConfig = AzureOSImageConfig{
 		ImageOffer:     "aks",
-		ImageSku:       "aks-engine-ubuntu-1804-202007",
+		ImageSku:       "aks-engine-ubuntu-1804-202008",
 		ImagePublisher: "microsoft-aks",
-		ImageVersion:   "2020.07.24",
+		ImageVersion:   "2020.08.19",
 	}
 
 	// AKSWindowsServer2019OSImageConfig is the AKS image based on Windows Server 2019
 	AKSWindowsServer2019OSImageConfig = AzureOSImageConfig{
 		ImageOffer:     "aks-windows",
-		ImageSku:       "2019-datacenter-core-smalldisk-2007",
+		ImageSku:       "2019-datacenter-core-smalldisk-2008",
 		ImagePublisher: "microsoft-aks",
-		ImageVersion:   "17763.1339.200718",
+		ImageVersion:   "17763.1397.200820",
 	}
 
 	// WindowsServer2019OSImageConfig is the 'vanilla' Windows Server 2019 image
