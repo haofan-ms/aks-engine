@@ -17401,6 +17401,42 @@ metadata:
     addonmanager.kubernetes.io/mode: Reconcile
 ---
 apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: secretproviderclasses-role
+  labels:
+    addonmanager.kubernetes.io/mode: Reconcile
+rules:
+- apiGroups:
+  - secrets-store.csi.x-k8s.io
+  resources:
+  - secretproviderclasses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - secrets-store.csi.x-k8s.io
+  resources:
+  - secretproviderclasspodstatuses
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - secrets-store.csi.x-k8s.io
+  resources:
+  - secretproviderclasspodstatuses/status
+  verbs:
+  - get
+  - patch
+  - update
+---
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: secretproviderclasses-rolebinding
@@ -17418,21 +17454,44 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: secretproviderclasses-role
+  name: secretprovidersyncing-role
   labels:
     addonmanager.kubernetes.io/mode: Reconcile
 rules:
 - apiGroups:
-  - secrets-store.csi.x-k8s.io
+  - ""
   resources:
-  - secretproviderclasses
+  - secrets
   verbs:
+  - create
+  - delete
   - get
   - list
+  - patch
+  - update
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: secretprovidersyncing-rolebinding
+  labels:
+    addonmanager.kubernetes.io/mode: Reconcile
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: secretprovidersyncing-role
+subjects:
+- kind: ServiceAccount
+  name: secrets-store-csi-driver
+  namespace: kube-system
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.3.0
+  creationTimestamp: null
   name: secretproviderclasses.secrets-store.csi.x-k8s.io
   labels:
     addonmanager.kubernetes.io/mode: Reconcile
@@ -17443,7 +17502,8 @@ spec:
     listKind: SecretProviderClassList
     plural: secretproviderclasses
     singular: secretproviderclass
-  scope: ""
+  preserveUnknownFields: false
+  scope: Namespaced
   validation:
     openAPIV3Schema:
       description: SecretProviderClass is the Schema for the secretproviderclasses
@@ -17452,12 +17512,12 @@ spec:
         apiVersion:
           description: 'APIVersion defines the versioned schema of this representation
             of an object. Servers should convert recognized schemas to the latest
-            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources'
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
           type: string
         kind:
           description: 'Kind is a string value representing the REST resource this
             object represents. Servers may infer this from the endpoint the client
-            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds'
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
           type: string
         metadata:
           type: object
@@ -17472,9 +17532,117 @@ spec:
             provider:
               description: Configuration for provider name
               type: string
+            secretObjects:
+              items:
+                description: SecretObject defines the desired state of synced K8s
+                  secret objects
+                properties:
+                  data:
+                    items:
+                      description: SecretObjectData defines the desired state of synced
+                        K8s secret object data
+                      properties:
+                        key:
+                          description: data field to populate
+                          type: string
+                        objectName:
+                          description: name of the object to sync
+                          type: string
+                      type: object
+                    type: array
+                  labels:
+                    additionalProperties:
+                      type: string
+                    description: labels of K8s secret object
+                    type: object
+                  secretName:
+                    description: name of the K8s secret object
+                    type: string
+                  type:
+                    description: type of K8s secret object
+                    type: string
+                type: object
+              type: array
           type: object
         status:
           description: SecretProviderClassStatus defines the observed state of SecretProviderClass
+          properties:
+            byPod:
+              items:
+                description: ByPodStatus defines the state of SecretProviderClass
+                  as seen by an individual controller
+                properties:
+                  id:
+                    description: id of the pod that wrote the status
+                    type: string
+                  namespace:
+                    description: namespace of the pod that wrote the status
+                    type: string
+                type: object
+              type: array
+          type: object
+      type: object
+  version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.3.0
+  creationTimestamp: null
+  name: secretproviderclasspodstatuses.secrets-store.csi.x-k8s.io
+  labels:
+    addonmanager.kubernetes.io/mode: Reconcile
+spec:
+  group: secrets-store.csi.x-k8s.io
+  names:
+    kind: SecretProviderClassPodStatus
+    listKind: SecretProviderClassPodStatusList
+    plural: secretproviderclasspodstatuses
+    singular: secretproviderclasspodstatus
+  preserveUnknownFields: false
+  scope: Namespaced
+  validation:
+    openAPIV3Schema:
+      description: SecretProviderClassPodStatus is the Schema for the secretproviderclassespodstatus
+        API
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        status:
+          description: SecretProviderClassPodStatusStatus defines the observed state
+            of SecretProviderClassPodStatus
+          properties:
+            mounted:
+              type: boolean
+            podName:
+              type: string
+            podUID:
+              type: string
+            secretProviderClassName:
+              type: string
+            targetPath:
+              type: string
           type: object
       type: object
   version: v1alpha1
@@ -17549,6 +17717,7 @@ spec:
             - "--endpoint=$(CSI_ENDPOINT)"
             - "--nodeid=$(KUBE_NODE_NAME)"
             - "--provider-volume=/etc/kubernetes/secrets-store-csi-providers"
+            - "--metrics-addr=:8080"
           env:
             - name: CSI_ENDPOINT
               value: unix:///csi/csi.sock
@@ -17594,6 +17763,7 @@ spec:
           - --csi-address=/csi/csi.sock
           - --probe-timeout=3s
           - --health-port=9808
+          - -v=2
           volumeMounts:
             - name: plugin-dir
               mountPath: /csi
@@ -17624,6 +17794,14 @@ spec:
       nodeSelector:
         kubernetes.io/os: linux
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: csi-secrets-store-provider-azure
+  namespace: kube-system
+  labels:
+    addonmanager.kubernetes.io/mode: Reconcile
+---
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -17643,7 +17821,7 @@ spec:
       labels:
         app: csi-secrets-store-provider-azure
     spec:
-      tolerations:
+      serviceAccountName: csi-secrets-store-provider-azure
       containers:
         - name: provider-azure-installer
           image: {{ContainerImage "provider-azure-installer"}}
@@ -24889,6 +25067,20 @@ function Select-Windows-Version {
   }
 }
 
+function Enable-Logging {
+  if ((Test-Path "$global:ContainerdInstallLocation\diag.ps1") -And (Test-Path "$global:ContainerdInstallLocation\ContainerPlatform.wprp")) {
+    $logs = Join-path $pwd.drive.Root logs
+    Write-Log "Containerd hyperv logging enabled; temp location $logs"
+    $diag = Join-Path $global:ContainerdInstallLocation diag.ps1
+    mkdir -Force $logs
+    # !ContainerPlatformPersistent profile is made to work with long term and boot tracing
+    & $diag -Start -ProfilePath "$global:ContainerdInstallLocation\ContainerPlatform.wprp!ContainerPlatformPersistent" -TempPath $logs
+  }
+  else {
+    Write-Log "Containerd hyperv logging script not avalaible"
+  }
+}
+
 function Install-Containerd {
   Param(
     [Parameter(Mandatory = $true)][string]
@@ -24918,9 +25110,9 @@ function Install-Containerd {
     # upstream containerd package is a tar 
     $tarfile = [Io.path]::Combine($ENV:TEMP, "containerd.tar.gz")
     DownloadFileOverHttp -Url $ContainerdUrl -DestinationPath $tarfile
-    mkdir -Force "C:\Program Files\containerd"
+    mkdir -Force $global:ContainerdInstallLocation
     tar -xzf $tarfile -C $global:ContainerdInstallLocation
-    mv $global:ContainerdInstallLocation\bin\* $global:ContainerdInstallLocation\
+    mv -Force $global:ContainerdInstallLocation\bin\* $global:ContainerdInstallLocation\
     del $tarfile
     del -Recurse -Force $global:ContainerdInstallLocation\bin
   }
@@ -24940,7 +25132,7 @@ function Install-Containerd {
 
   # configure
   if ($global:DefaultContainerdRuntimeHandler -eq "hyperv") {
-    Write-Host "default runtime for containerd set to hyperv"
+    Write-Log "default runtime for containerd set to hyperv"
     $sandboxIsolation = 1
   }
 
@@ -24962,6 +25154,7 @@ function Install-Containerd {
     Out-File -FilePath "$configFile" -Encoding ascii
 
   RegisterContainerDService
+  Enable-Logging
 }
 `)
 
