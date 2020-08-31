@@ -454,7 +454,7 @@ if [ "${UPGRADE_CLUSTER}" = "true" ]; then
       -e ARC_LOCATION=${ARC_LOCATION:-$LOCATION} \
       ${DEV_IMAGE} make test-kubernetes
 
-    sudo mv $(pwd)/test/e2e/kubernetes/junit.xml $(pwd)/test/e2e/kubernetes/scale-down-junit.xml
+    sudo mv $(pwd)/test/e2e/kubernetes/junit.xml $(pwd)/test/e2e/kubernetes/upgrade-junit.xml
   done
 fi
 
