@@ -121,7 +121,7 @@ func (cli *CLIProvisioner) provision() error {
 		privateKeyPath := filepath.Join(outputPath, privateKeyName)
 		createPrivateKey := true
 		if cli.Config.PrivateSSHKeyPath != "" {
-			cmd = exec.Command("sudo", "mv", cli.Config.PrivateSSHKeyPath, privateKeyPath)
+			cmd := exec.Command("sudo", "mv", cli.Config.PrivateSSHKeyPath, privateKeyPath)
 			util.PrintCommand(cmd)
 			out, err := cmd.CombinedOutput()
 			if err != nil {

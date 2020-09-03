@@ -53,7 +53,7 @@ function tryExit {
 }
 
 function moveStageJunit {
-  if [ "${AZURE_ENV}" == "AzureStackCloud" ]; then
+  if [ "${AZURE_ENV}" == "AzureStackCloud" ] && [ "${SKIP_TEST}" == "false" ]; then
     sudo mv $(pwd)/test/e2e/kubernetes/junit.xml $(pwd)/test/e2e/kubernetes/${1}-junit.xml
   fi
 }
