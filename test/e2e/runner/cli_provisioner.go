@@ -125,7 +125,7 @@ func (cli *CLIProvisioner) provision() error {
 			util.PrintCommand(cmd)
 			out, err := cmd.CombinedOutput()
 			if err != nil {
-				return "", errors.Wrapf(err, "Error while trying to move private ssh key\nOutput:%s", out)
+				return errors.Wrapf(err, "Error while trying to move private ssh key\nOutput:%s", out)
 			}
 			createPrivateKey = false
 		}
