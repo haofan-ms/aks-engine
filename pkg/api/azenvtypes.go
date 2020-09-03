@@ -170,7 +170,7 @@ var (
 	// AKSUbuntu1604OSImageConfig is the AKS image based on Ubuntu 16.04-LTS.
 	AKSUbuntu1604OSImageConfig = AzureOSImageConfig{
 		ImageOffer:     "aks",
-		ImageSku:       "aks-engine-ubuntu-1604-202007",
+		ImageSku:       "aks-engine-ubuntu-1604-202008",
 		ImagePublisher: "microsoft-aks",
 		ImageVersion:   "2020.08.24",
 	}
@@ -178,7 +178,7 @@ var (
 	// AKSUbuntu1804OSImageConfig is the AKS image based on Ubuntu 18.04-LTS.
 	AKSUbuntu1804OSImageConfig = AzureOSImageConfig{
 		ImageOffer:     "aks",
-		ImageSku:       "aks-engine-ubuntu-1804-202007",
+		ImageSku:       "aks-engine-ubuntu-1804-202008",
 		ImagePublisher: "microsoft-aks",
 		ImageVersion:   "2020.08.24",
 	}
