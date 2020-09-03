@@ -121,11 +121,12 @@ func (cli *CLIProvisioner) provision() error {
 		privateKeyPath := filepath.Join(outputPath, privateKeyName)
 		createPrivateKey := true
 		if cli.Config.PrivateSSHKeyPath != "" {
-			cmd := exec.Command("sudo", "mv", cli.Config.PrivateSSHKeyPath, privateKeyPath)
-			util.PrintCommand(cmd)
-			out, err := cmd.CombinedOutput()
+			//cmd := exec.Command("mv", cli.Config.PrivateSSHKeyPath, privateKeyPath)
+			//util.PrintCommand(cmd)
+			//out, err := cmd.CombinedOutput()
+			err = os.Rename(cli.Config.PrivateSSHKeyPath, privateKeyPath)
 			if err != nil {
-				return errors.Wrapf(err, "Error while trying to move private ssh key\nOutput:%s", out)
+				return errors.Wrapf(err, "Error while trying to move private ssh key")
 			}
 			createPrivateKey = false
 		}
