@@ -90,7 +90,7 @@ func (cli *CLIProvisioner) Run() error {
 func createSaveSSH(keyPath string, createPrivateKey bool) (string, error) {
 	cmd := exec.Command("ssh-keygen", "-f", keyPath, "-q", "-N", "", "-b", "2048", "-t", "rsa")
 	if !createPrivateKey {
-		cmd = exec.Command("ssh-keygen", "-y", "-f", keyPath, ">", keyPath+".pub")
+		cmd = exec.Command("ssh-keygen", "-y", "-f", "%s > %s", keyPath, keyPath+".pub")
 	}
 
 	util.PrintCommand(cmd)
