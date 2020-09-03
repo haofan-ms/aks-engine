@@ -99,7 +99,6 @@ func createSaveSSH(keyPath string, createPrivateKey bool) (string, error) {
 		return "", errors.Wrapf(err, "Error while trying to generate ssh key\nOutput:%s", out)
 	}
 	if !createPrivateKey {
-		fmt.Printf(out)
 		err2 := ioutil.WriteFile(keyPath+".pub", out, 0644)
 		if err2 != nil {
 			return "", errors.Wrapf(err2, "Error while trying to write public ssh key")
