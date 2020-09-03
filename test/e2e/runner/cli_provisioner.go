@@ -87,10 +87,11 @@ func (cli *CLIProvisioner) Run() error {
 	return errors.New("Unable to run provisioner")
 }
 
-func createSaveSSH(outputPath string, privateKeyName string) (string, error) {
-	os.Mkdir(outputPath, 0755)
-	keyPath := filepath.Join(outputPath, privateKeyName)
+func createSaveSSH(keyPath string, createPrivateKey bool) (string, error) {
 	cmd := exec.Command("ssh-keygen", "-f", keyPath, "-q", "-N", "", "-b", "2048", "-t", "rsa")
+	if !createPrivateKey {
+		cmd = exec.Command("ssh-keygen", "-y", "-f", keyPath, ">", keyPath+".pub")
+	}
 
 	util.PrintCommand(cmd)
 	out, err := cmd.CombinedOutput()
@@ -113,17 +114,26 @@ func (cli *CLIProvisioner) provision() error {
 	}
 	os.Setenv("NAME", cli.Config.Name)
 
-	if cli.Config.PublicSSHKey == "" && cli.Config.PrivateSSHKeyPath == "" {
-		outputPath := filepath.Join(cli.Config.CurrentWorkingDir, "_output")
-		if !cli.Config.UseDeployCommand {
-			publicSSHKey, err := createSaveSSH(outputPath, cli.Config.Name+"-ssh")
+	outputPath := filepath.Join(cli.Config.CurrentWorkingDir, "_output")
+	if !cli.Config.UseDeployCommand {
+		privateKeyName := cli.Config.Name + "-ssh"
+		os.Mkdir(outputPath, 0755)
+		privateKeyPath := filepath.Join(outputPath, privateKeyName)
+		createPrivateKey := true
+		if cli.Config.PrivateSSHKeyPath != "" {
+			cmd = exec.Command("sudo", "mv", cli.Config.PrivateSSHKeyPath, privateKeyPath)
+			util.PrintCommand(cmd)
+			out, err := cmd.CombinedOutput()
 			if err != nil {
-				return errors.Wrap(err, "Error while generating ssh keys")
+				return "", errors.Wrapf(err, "Error while trying to move private ssh key\nOutput:%s", out)
 			}
-			os.Setenv("PUBLIC_SSH_KEY", publicSSHKey)
+			createPrivateKey = false
 		}
-	} else if cli.Config.PublicSSHKey == "" || cli.Config.PrivateSSHKeyPath == "" {
-		return errors.Errorf("Error validating SSH keys, variable PUBLIC_SSH_KEY_FILE or PRIVATE_SSH_KEY_FILE not set")
+		publicSSHKey, err2 := createSaveSSH(privateKeyPath, createPrivateKey)
+		if err2 != nil {
+			return errors.Wrap(err2, "Error while generating ssh keys")
+		}
+		os.Setenv("PUBLIC_SSH_KEY", publicSSHKey)
 	}
 
 	os.Setenv("DNS_PREFIX", cli.Config.Name)
