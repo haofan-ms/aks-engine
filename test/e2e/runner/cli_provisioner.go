@@ -124,7 +124,7 @@ func (cli *CLIProvisioner) provision() error {
 			//cmd := exec.Command("mv", cli.Config.PrivateSSHKeyPath, privateKeyPath)
 			//util.PrintCommand(cmd)
 			//out, err := cmd.CombinedOutput()
-			err = os.Rename(cli.Config.PrivateSSHKeyPath, privateKeyPath)
+			err := os.Rename(cli.Config.PrivateSSHKeyPath, privateKeyPath)
 			if err != nil {
 				return errors.Wrapf(err, "Error while trying to move private ssh key")
 			}
