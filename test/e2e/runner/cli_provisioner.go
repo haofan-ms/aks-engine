@@ -90,13 +90,20 @@ func (cli *CLIProvisioner) Run() error {
 func createSaveSSH(keyPath string, createPrivateKey bool) (string, error) {
 	cmd := exec.Command("ssh-keygen", "-f", keyPath, "-q", "-N", "", "-b", "2048", "-t", "rsa")
 	if !createPrivateKey {
-		cmd = exec.Command("ssh-keygen", "-y", "-f", "%s > %s", keyPath, keyPath+".pub")
+		cmd = exec.Command("ssh-keygen", "-y", "-f", keyPath)
 	}
 
 	util.PrintCommand(cmd)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		return "", errors.Wrapf(err, "Error while trying to generate ssh key\nOutput:%s", out)
+	}
+	if !createPrivateKey {
+		fmt.printf(out)
+		err2 := ioutil.WriteFile(keyPath+".pub", out, 0644)
+		if err2 != nil {
+			return "", errors.Wrapf(err2, "Error while trying to write public ssh key")
+		}
 	}
 
 	os.Chmod(keyPath, 0600)
