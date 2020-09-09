@@ -55,7 +55,7 @@ function tryExit {
 function renameResultsFile {
   JUNIT_PATH=$(pwd)/test/e2e/kubernetes/junit.xml
   if [ "${AZURE_ENV}" == "AzureStackCloud" ] && [ -f ${JUNIT_PATH} ]; then
-    sudo mv ${JUNIT_PATH} $(pwd)/test/e2e/kubernetes/${1}-junit.xml
+    mv ${JUNIT_PATH} $(pwd)/test/e2e/kubernetes/${1}-junit.xml
   fi
 }
 
@@ -133,6 +133,7 @@ docker run --rm \
 -e CUSTOM_HYPERKUBE_IMAGE="${CUSTOM_HYPERKUBE_IMAGE}" \
 -e CUSTOM_KUBE_PROXY_IMAGE="${CUSTOM_KUBE_PROXY_IMAGE}" \
 -e IS_JENKINS="${IS_JENKINS}" \
+-e TEST_PVC="${TEST_PVC}"
 -e SKIP_TEST="${SKIP_TESTS}" \
 -e GINKGO_FAIL_FAST="${GINKGO_FAIL_FAST}" \
 -e GINKGO_FOCUS="${GINKGO_FOCUS}" \
