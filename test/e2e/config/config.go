@@ -183,10 +183,12 @@ func (ccc *CustomCloudConfig) SetEnvironment() error {
 		CA=/usr/local/lib/python${VER}/dist-packages/certifi/cacert.pem;
 		if [ -f ${CA} ]; then cat %s >> ${CA}; fi;`, devImagePython, azsSelfSignedCaPath))
 
+		fmt.Printf("python command: %s", cmd)
 		if out, err := cmd.CombinedOutput(); err != nil {
 			log.Printf("output:%s\n", out)
 			return err
 		}
+		fmt.Printf("Done with python command: %s", out)
 	}
 
 	environmentName := fmt.Sprintf("AzureStack%v", time.Now().Unix())
