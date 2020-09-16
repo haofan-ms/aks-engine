@@ -177,6 +177,7 @@ func (ccc *CustomCloudConfig) SetEnvironment() error {
 			devImagePython = "python"
 		}
 
+		fmt.Printf("python version: %s", devImagePython)
 		cmd := exec.Command("/bin/bash", "-c",
 			fmt.Sprintf(`VER=$(%s -V | grep -o [0-9].[0-9]*. | grep -o [0-9].[0-9]*);
 		CA=/usr/local/lib/python${VER}/dist-packages/certifi/cacert.pem;
