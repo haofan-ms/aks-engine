@@ -188,7 +188,7 @@ func (ccc *CustomCloudConfig) SetEnvironment() error {
 			log.Printf("output:%s\n", out)
 			return err
 		}
-		fmt.Printf("Done with python command: %s", out)
+		fmt.Printf("Done with python command")
 	}
 
 	environmentName := fmt.Sprintf("AzureStack%v", time.Now().Unix())
