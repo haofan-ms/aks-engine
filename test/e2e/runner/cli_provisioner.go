@@ -310,7 +310,7 @@ func (cli *CLIProvisioner) generateAndDeploy() error {
 	}
 
 	//if we use Generate, then we need to call CreateDeployment
-	if !cli.Config.UseDeployCommand {
+	if cli.Config.UseDeployCommand {
 		err = cli.Account.CreateDeployment(cli.Config.Name, cli.Engine)
 		if err != nil {
 			return errors.Wrap(err, "Error while trying to create deployment")

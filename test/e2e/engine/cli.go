@@ -14,6 +14,7 @@ import (
 // Generate will run aks-engine generate on a given cluster definition
 func (e *Engine) Generate() error {
 	cmd := exec.Command("./bin/aks-engine", "generate", e.Config.ClusterDefinitionTemplate, "--output-directory", e.Config.GeneratedDefinitionPath)
+	Log.Warnf("e.Config.ClusterDefinitionTemplate: %s", e.Config.ClusterDefinitionTemplate)
 	util.PrintCommand(cmd)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
