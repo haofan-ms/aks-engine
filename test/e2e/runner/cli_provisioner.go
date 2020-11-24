@@ -220,6 +220,7 @@ func (cli *CLIProvisioner) provision() error {
 	if cli.CreateVNET && cli.MasterVMSS {
 		eng, err = engine.Build(cli.Config, masterSubnetID, []string{agentSubnetID}, true)
 	} else {
+		log.Print("Building!!!!!!!!!!!!!!!!!")
 		eng, err = engine.Build(cli.Config, masterSubnetID, agentSubnetIDs, false)
 	}
 
