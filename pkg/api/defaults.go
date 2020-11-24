@@ -177,12 +177,17 @@ func (cs *ContainerService) setOrchestratorDefaults(isUpgrade, isScale bool) {
 			}
 		}
 
+		log.Warn("SETTING VALUE FOR UseManagedIdentity!!!!!!!!!!!!!!!!!!!!!!")
+		log.Warnf("cs.Properties.IsCustomCloudProfile(): %t", cs.Properties.IsCustomCloudProfile())
 		if !isUpgrade && !isScale &&
 			!cs.Properties.IsCustomCloudProfile() &&
 			!cs.Properties.MasterProfile.IsVirtualMachineScaleSets() &&
 			o.KubernetesConfig.UseManagedIdentity == nil {
 			o.KubernetesConfig.UseManagedIdentity = to.BoolPtr(true)
+			log.Warnf("set o.KubernetesConfig.UseManagedIdentity: %v", o.KubernetesConfig.UseManagedIdentity)
 		}
+		log.Warnf("not set o.KubernetesConfig.UseManagedIdentity: %v", o.KubernetesConfig.UseManagedIdentity)
+		log.Warnf("to bool o.KubernetesConfig.UseManagedIdentity: %v", to.Bool(o.KubernetesConfig.UseManagedIdentity))
 
 		if a.HasWindows() {
 			if o.KubernetesConfig.NetworkPlugin == "" {

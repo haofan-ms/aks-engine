@@ -322,8 +322,11 @@ func autofillApimodel(dc *deployCmd) error {
 	}
 
 	k8sConfig := dc.containerService.Properties.OrchestratorProfile.KubernetesConfig
+	log.Warnf("k8sConfig: %v", k8sConfig)
 
 	useManagedIdentity := k8sConfig != nil && to.Bool(k8sConfig.UseManagedIdentity)
+	log.Warnf("k8sConfig.UseManagedIdentity: %v", k8sConfig.UseManagedIdentity)
+	log.Warnf("useManagedIdentity: %v", useManagedIdentity)
 
 	if !useManagedIdentity {
 		spp := dc.containerService.Properties.ServicePrincipalProfile
