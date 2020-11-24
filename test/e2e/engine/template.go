@@ -151,6 +151,11 @@ func Build(cfg *config.Config, masterSubnetID string, agentSubnetIDs []string, i
 		prop.OrchestratorProfile.KubernetesConfig = &vlabs.KubernetesConfig{}
 	}
 
+	log.Printf("!!!!!!!!!config: %v", config)
+	log.Printf("!!!!!!!!!config.MSIUserAssignedID: %v", config.MSIUserAssignedID)
+	log.Printf("!!!!!!!!!prop.OrchestratorProfile.KubernetesConfig.UseManagedIdentity: %v", prop.OrchestratorProfile.KubernetesConfig.UseManagedIdentity)
+	log.Printf("!!!!!!!!!config.UseManagedIdentity: %v", config.UseManagedIdentity)
+
 	if config.MSIUserAssignedID != "" {
 		prop.OrchestratorProfile.KubernetesConfig.UseManagedIdentity = to.BoolPtr(true)
 		prop.OrchestratorProfile.KubernetesConfig.UserAssignedID = config.MSIUserAssignedID
@@ -159,6 +164,11 @@ func Build(cfg *config.Config, masterSubnetID string, agentSubnetIDs []string, i
 	if prop.OrchestratorProfile.KubernetesConfig.UseManagedIdentity == nil {
 		prop.OrchestratorProfile.KubernetesConfig.UseManagedIdentity = to.BoolPtr(config.UseManagedIdentity)
 	}
+
+	log.Printf("??????config: %v", config)
+	log.Printf("??????config.MSIUserAssignedID: %v", config.MSIUserAssignedID)
+	log.Printf("??????prop.OrchestratorProfile.KubernetesConfig.UseManagedIdentity: %v", prop.OrchestratorProfile.KubernetesConfig.UseManagedIdentity)
+	log.Printf("??????config.UseManagedIdentity: %v", config.UseManagedIdentity)
 
 	if config.ClientID != "" && config.ClientSecret != "" && !(prop.OrchestratorProfile.KubernetesConfig != nil && to.Bool(prop.OrchestratorProfile.KubernetesConfig.UseManagedIdentity)) {
 		if !prop.IsAzureStackCloud() {
